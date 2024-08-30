@@ -15,8 +15,10 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 app.use(cors({
   origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: 'PUT, POST, GET, DELETE, PATCH, OPTIONS',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  
 }));
 app.use(express.json());
 
