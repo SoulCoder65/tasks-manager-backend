@@ -57,7 +57,7 @@ const login = async (req, res) => {
   try {
     // Check if the user exists
     const user = await User.findOne({ email });
-    if (!user) {
+    if (!user || user.googleId) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 

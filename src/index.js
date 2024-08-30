@@ -14,10 +14,10 @@ mongoose.connect(process.env.MONGODB_URI, {
 });
 
 app.use(cors({
-  origin: '*', 
+  origin: process.env.FRONTEND_URL,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: "*",
-  credentials: true, 
+  credentials: true,
 }));
 
 app.options('*', cors());
