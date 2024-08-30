@@ -81,7 +81,6 @@ exports.updateTask = async (req, res) => {
 
     res.status(200).json({ task });
   } catch (err) {
-    console.log("ERR-", err);
     res.status(500).json({ error: "Error updating task" });
   }
 };

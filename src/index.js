@@ -2,8 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-// const passport = require('passport');
-require('./config/passport');
 const userRoutes = require('./routes/userRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 const { swaggerUi, swaggerSpec } = require('./config/swagger');
@@ -21,7 +19,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
-// app.use(passport.initialize());
 
 app.use('/api', userRoutes);
 app.use('/api', taskRoutes);

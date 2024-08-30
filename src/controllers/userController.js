@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const admin = require("../config/firebase");
 
 const signup = async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
@@ -46,7 +47,7 @@ const signup = async (req, res, next) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to sign up user' });
+    res.status(500).json({ error: "Failed to sign up user" });
   }
 };
 
@@ -80,8 +81,37 @@ const login = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to log in user' });
+    res.status(500).json({ error: "Failed to log in user" });
   }
 };
 
-module.exports = { login, signup };
+const googleLogin = async (req, res) => {
+  const { idToken } = req.body;
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const { uid, email, name } = decodedToken;
+    
+    let user = await User.findOne({ email: email });
+    if (!user) {
+      user = new User({ googleId: uid, email, firstName: name });
+      await user.save();
+    }
+
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    res.status(200).json({
+      token,
+      user: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to login/create account for user" });
+  }
+};
+
+module.exports = { login, signup, googleLogin };
